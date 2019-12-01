@@ -15,7 +15,6 @@ Aplicacion.prototype.dibujarFiltros = function() {
     this.dibujarHorarios();
     this.dibujarRubros();
     this.dibujarCiudades();
-
 }
 
 //Función que se encarga de dibujar todos los restaurantes que recibe por parámetro.
@@ -25,7 +24,6 @@ Aplicacion.prototype.dibujarListado = function(restaurantes) {
     //Se borra el contenedor de restaurantes
     $(".flex").empty();
     var elementos = [];
-
     //Si no se recibe ningún restaurante por parámetro (porque los filtros aplicados no retornaron ningún resultado) se crea un elemento que va a mostrar en el HTML el mensaje de "No se encontraron resultados".
     if (restaurantes.length === 0) {
         elementos.push($("<span/>").attr("class", "alerta").html("No se encontraron resultados"));
@@ -143,7 +141,7 @@ Aplicacion.prototype.dibujarCiudades = function() {
     this.cargarOpcionDefault("filtro-ciudad", "Ciudad");
     this.cargarOpcionTodos("filtro-ciudad");
 
-    this.listado.obtC().forEach(function(ciudad) {
+    this.listado.obtenerUbicaciones().forEach(function(ciudad) {
         var nuevaOpcion = $("<option/>").text(ciudad).val(ciudad);
         nuevaOpcion.appendTo("#filtro-ciudad");
     });
@@ -155,7 +153,7 @@ Aplicacion.prototype.dibujarRubros = function() {
     this.cargarOpcionDefault("filtro-rubro", "Rubro");
     this.cargarOpcionTodos("filtro-rubro")
 
-    this.listado.obtR().forEach(function(rubro) {
+    this.listado.obtenerRubros().forEach(function(rubro) {
         var nuevaOpcion = $("<option/>").text(rubro).val(rubro);
         nuevaOpcion.appendTo("#filtro-rubro");
     });
@@ -168,7 +166,7 @@ Aplicacion.prototype.dibujarHorarios = function() {
     this.cargarOpcionDefault("filtro-horario", "Horario");
     this.cargarOpcionTodos("filtro-horario")
 
-    this.listado.obtH().forEach(function(horario) {
+    this.listado.obtenerHorarios().forEach(function(horario) {
         var nuevaOpcion = $("<option/>").text(horario).val(horario);
         nuevaOpcion.appendTo("#filtro-horario");
     });
