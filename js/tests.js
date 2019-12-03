@@ -1,40 +1,29 @@
 var expect = chai.expect;
+// Creo un restaurant que voy a usar para casi todos los tests. Solo lo redefino en el test en el que necesito otra franja horaria.
+let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
 
 describe('Función reservarHorario(horario)', function(){
 
-    // beforeEach(function(){
-    //     let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-    //     // return restaurant;
-    // });
-
     it('Eliminar horario del arreglo', function(){
         // Cuando se reserva un horario de un restaurant, el horario correspondiente se elimina del arreglo.
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         restaurant.horarios.map((hora)=>{
             restaurant.reservarHorario(hora);
-            let horarioReservado = expect(restaurant.horarios.indexOf(hora)).to.equal(-1);
+            let horarioReservado = expect(restaurant.horarios).not.to.include(hora);
             return horarioReservado;
         });
     })
 
     it('No modificar si se reserva un horario inexistente', function(){
         // Cuando se reserva un horario que el restaurant no posee, el arreglo se mantiene igual.
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         let arregloOriginal = restaurant.horarios;
         restaurant.reservarHorario('25');
-        // expect(restaurant.horarios).to.equal(arregloOriginal);
         return restaurant.horarios===arregloOriginal;
     });
 
     it('No modificar arreglo si no se pasa parámetro', function(){
         // Cuando se intenta reservar un horario pero no se le pasa ningún parámetro a la función, el arreglo se mantiene igual.
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         let arregloOriginal = restaurant.horarios;
         restaurant.reservarHorario();
-        // expect(restaurant.horarios).to.equal(arregloOriginal);
         return restaurant.horarios===arregloOriginal;
     });
 
@@ -44,8 +33,6 @@ describe('Función obtenerPuntuación()',function(){
 
     it('La puntuación se calcula correctamente', function(){
         // Dado un restaurant con determinadas calificaciones, la puntuación (que es el promedio de ellas) se calcula correctamente.
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         let esUnArray = expect(restaurant.calificaciones).to.be.an('array');
         if(esUnArray){
             // Primero vacío el arreglo y le doy tres puntuaciones positivas
@@ -71,8 +58,6 @@ describe('Función obtenerPuntuación()',function(){
     
     it('La puntuación sin calificaciones es cero', function(){
         // Dado un restaurant que no tiene ninguna calificación, la puntuación es igual a 0.
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Primero vacío el array
         restaurant.calificaciones=[];
         // La puntuación debería ser nula
@@ -84,8 +69,6 @@ describe('Función obtenerPuntuación()',function(){
 describe('Función calificar()', function(){
     it('Calificación dentro del rango permitido', function(){
         // Si la calificación está dentro del rango permitido, se pushea al arreglo de calificaciones
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         let longOriginal = restaurant.calificaciones.length;
         // Califico con un número dentro del rango y con los dos extremos del rango
         restaurant.calificar(5);
@@ -97,8 +80,6 @@ describe('Función calificar()', function(){
 
     it('Calificación fuera del rango permitido', function(){
         // Si la calificación está fuera del rango permitido, debería ignorarla.
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         let longOriginal = restaurant.calificaciones.length;            
         // Califico con cero, con un valor negativo y con un número mayor a diez.
         restaurant.calificar(0);
@@ -113,22 +94,22 @@ describe('Función buscarRestaurante(id)', function(){
 
     it('Busca un restaurant en el listado', function(){
         let restaurantBuscado = listado.buscarRestaurante('Mandarín Kitchen');
-        return 'Mandarín Kitchen'===restaurantBuscado.id;
+        return 'Mandarín Kitchen' === restaurantBuscado.id;
     });
 
     it('Devuelve error si el restaurant no está en el listado', function(){
         let restaurantBuscado = listado.buscarRestaurante('Otro restaurant');
-        return restaurantBuscado==='No se ha encontrado ningún restaurant';
+        expect(restaurantBuscado).to.equal('No se ha encontrado ningún restaurant');
     });
 
     it('Devuelve error con string vacío', function(){
         let restaurantBuscado = listado.buscarRestaurante('');
-        return restaurantBuscado==='No se ha encontrado ningún restaurant';
+        expect(restaurantBuscado).to.equal('No se ha encontrado ningún restaurant');
     });
 
     it('Devuelve error con dato numérico', function(){
         let restaurantBuscado = listado.buscarRestaurante(95);
-        return restaurantBuscado==='No se ha encontrado ningún restaurant';
+        expect(restaurantBuscado).to.equal('No se ha encontrado ningún restaurant');
     });
 });
 
@@ -171,8 +152,6 @@ describe('Función obtenerRestaurantes(filtroRubro, filtroCiudad, filtroHorario)
 
 describe('Objeto Reserva', function(){
     it('Calcula el precio base de la reserva', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Primero tengo que hacer la reserva.
         let cantPersonas = 5;
         let fecha = new Date(2019,10,26,21,00);
@@ -184,8 +163,6 @@ describe('Objeto Reserva', function(){
     });
 
     it('Calcula el precio total de la reserva, sin código de descuento. Grupo de menos de 4 personas', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Para grupos de menos de 4 personas no hay descuento
         let cantPersonas = 2;
         let fecha = new Date(2019,10,26,22,30);
@@ -197,8 +174,6 @@ describe('Objeto Reserva', function(){
     });
 
     it('Calcula el precio total de la reserva, sin código de descuento. Grupo entre 4 y 6 personas', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Si la cantidad de personas de la reserva está entre 4 y 6 personas, se agrega un 5% de descuento
         let cantPersonas = 4;
         let fecha = new Date(2019,10,27,22,30);
@@ -210,8 +185,6 @@ describe('Objeto Reserva', function(){
     });
 
     it('Calcula el precio total de la reserva, sin código de descuento. Grupo entre 7 y 8 personas', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Para grupos entre de 7 y 8 personas se debería aplicar un 10% de descuento
         let cantPersonas = 7;
         let precioFinal;
@@ -224,8 +197,6 @@ describe('Objeto Reserva', function(){
     });
 
     it('Calcula el precio total de la reserva, sin código de descuento. Grupo de más de 8 personas', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Para grupos de más de 8 personas se aplica un 15% de descuento
         let cantPersonas = 10;
         let precioFinal;
@@ -238,8 +209,6 @@ describe('Objeto Reserva', function(){
     });
     
     it('Calcula el precio total de la reserva, código de descuento DES15', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // obtiene un 15% de descuento
         let cantPersonas = 2;
         let precioFinal;
@@ -252,8 +221,6 @@ describe('Objeto Reserva', function(){
     });
     
     it('Calcula el precio total de la reserva, código de descuento DES200', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // obtiene $200 de descuento
         let cantPersonas = 2;
         let precioFinal;
@@ -266,8 +233,6 @@ describe('Objeto Reserva', function(){
     });
     
     it('Calcula el precio total de la reserva, código de descuento DES1', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // obtiene de descuento el valor equivalente al precio de una persona
         let cantPersonas = 2;
         let precioFinal;
@@ -280,7 +245,7 @@ describe('Objeto Reserva', function(){
     });
 
     it('Calcula el precio total de la reserva, sin código de descuento. Franja horaria de 13 a 14', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "13:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
+        restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "13:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
 
         // Se agrega un adicional del 5%
         let cantPersonas = 2;
@@ -294,8 +259,6 @@ describe('Objeto Reserva', function(){
     });
     
     it('Calcula el precio total de la reserva, sin código de descuento. Franja horaria de 20 a 21', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Se agrega un adicional del 5%
         let cantPersonas = 2;
         let precioFinal;
@@ -308,8 +271,6 @@ describe('Objeto Reserva', function(){
     });
     
     it('Calcula el precio total de la reserva, sin código de descuento. Fin de semana', function(){
-        let restaurant = new Restaurant(25, "Restaurant Prueba", "Desayuno", "Nueva York", ["21:00", "22:30", "15:00"], "../img/desayuno2.jpg", [9, 5, 7, 6, 7], 290);
-
         // Se agrega un adicional del 10%
         let cantPersonas = 2;
         let precioFinal;
